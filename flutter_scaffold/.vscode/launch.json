@@ -1,0 +1,36 @@
+{
+  // Debug 启动文件
+  // https://code.visualstudio.com/docs/editor/debugging#_launchjson-attributes
+  // https://dartcode.org/docs/launch-configuration/
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Android",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main_dev.dart",
+      "deviceId": "sdk gphone x86 arm", // 设备ID，可执行 `flutter devices` 命令查看
+      "args": [
+        // "--verbose",     // verbose mode
+      ],
+      // "preLaunchTask": "Start Android Emulator"
+    },
+    {
+      "name": "iPhone",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main_dev.dart",
+      "deviceId": "iphone", // 设备ID
+      "args": [
+        // "--verbose",
+      ],
+    }
+  ],
+  // 多设备调试
+  "compounds": [
+    {
+      "name": "All Devices",
+      "configurations": ["Android", "iPhone"]
+    }
+  ]
+}

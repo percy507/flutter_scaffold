@@ -1,0 +1,29 @@
+{
+  "git.ignoreLimitWarning": true,
+  "search.exclude": {
+    "**/.dart_tool": true,
+    "**/.flutter": true,
+    "**/build": true
+  },
+  // 隐藏指定的目录或文件
+  "files.exclude": {
+    "**/.dart_tool": true,
+    "**/.flutter": true,
+    "**/.package": true,
+    "**/.flutter-plugins": true,
+    "**/.flutter-plugins-dependencies": true,
+    "**/flutter_scaffold.iml": true
+  },
+  "dart.checkForSdkUpdates": false,
+  "dart.openDevTools": "flutter",
+  "editor.wordWrapColumn": 100,
+  "editor.wordWrap": "on",
+  "dart.lineLength": 100,
+  "dart.flutterSdkPath": ".flutter",
+  "dart.sdkPath": ".flutter/bin/cache/dart-sdk",
+
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": true
+  }
+}

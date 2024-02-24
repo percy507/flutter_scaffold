@@ -1,0 +1,44 @@
+// 详细配置: https://code.visualstudio.com/docs/editor/tasks
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Start Android Emulator",
+      "type": "shell",
+      // TODO 写脚本实现吧
+      // https://gist.github.com/wbroek/a2caf1ace90eac0c5e25497548f41a6e
+      // "isBackground": true,
+      // "command": "/Users/mps/Library/Android/sdk/emulator/emulator",
+      // "args": ["-avd", "Pixel_4_API_30", "-no-snapshot"],
+      // "problemMatcher": {
+			// 	"owner": "shell",
+			// 	"pattern":[
+			// 		{
+			// 			"regexp": "^([^\\\\s].*)\\\\(error)\\\\s*(.*)$",
+			// 			"file": 1,
+			// 			"location": 2,
+			// 			"message": 3
+			// 		}
+			// 	],
+      //   "background": {
+			// 		"activeOnStart": false,
+      //     "beginsPattern": "(.*?)",
+      //     "endsPattern": "boot completed"
+      //   }
+      // },
+      // "presentation": {
+      //   "reveal": "always"
+      // }
+    },
+    {
+      "label": "Start iOS Simulator",
+      "type": "shell",
+      "isBackground": false,
+      "command": "open",
+      "args": ["-a", "Simulator"],
+      "presentation": {
+        "reveal": "always"
+      }
+    }
+  ]
+}

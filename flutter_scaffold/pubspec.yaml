@@ -1,0 +1,108 @@
+# 当前项目的包名，不是app应用名称
+name: myapp
+
+# 项目描述
+description: A new Flutter project.
+
+# The following line prevents the package from being accidentally published to
+# pub.dev using `pub publish`. This is preferred for private packages.
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
+
+# The following defines the version and build number for your application.
+# A version number is three numbers separated by dots, like 1.2.43
+# followed by an optional build number separated by a +.
+# Both the version and the builder number may be overridden in flutter
+# build by specifying --build-name and --build-number, respectively.
+# In Android, build-name is used as versionName while build-number used as versionCode.
+# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
+# In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
+# Read more about iOS versioning at
+# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+version: 1.0.0+1
+
+# 编译环境
+environment:
+  sdk: ">=2.7.0 <3.0.0" # dart sdk 版本区间
+
+# 项目的依赖包
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  # 下面标记 @required 的，表示在自定义控件或utils中有用到
+  cupertino_icons: ^1.0.0
+  shared_preferences: ">=0.5.12+4 <2.0.0" # @required 跨平台，简单数据本地持久化
+  path_provider: ^1.6.24 # @required 跨平台，系统路径支持
+  sqflite: ^1.3.0 # @required SQLite数据库插件
+  device_info: ^1.0.0 # @required 获取设备信息
+  package_info: ^0.4.3+2 # @required 获取应用包相关的信息
+  open_file: ^3.0.3 # @required 唤起原生应用以打开文件
+  oktoast: ^2.3.2 # @required 纯dart实现的toast库
+  dokit: ^0.2.5 # @required 滴滴开源的flutter调试工具包
+  crypto: ^2.1.5 # @required A set of cryptographic hashing functions in pure Dart
+  dio: ^3.0.10 # @required 强大的 http 请求库
+  flutter_secure_storage: ^3.3.5 # @required 跨平台，敏感数据存储
+  permission_handler: ^5.0.1+1 # @required 跨平台，检查或请求应用权限
+  webview_flutter: ^1.0.7 # @required webview 支持
+  url_launcher: ^5.7.10 # @required launching a URL in the mobile platform
+  share: ^0.6.5+4 # @required share content via the platform's share dialog
+
+  connectivity: ^2.0.2 # 检查网络连接情况
+  lottie: ^0.7.0+1 # 解析AE动画
+  logger: ^0.9.4 # 更优雅地打印日志
+  logger_flutter: # logger 插件，可以在手机app上直接查看日志
+    git:
+      url: https://github.com/ewertonrp/logger_flutter.git
+  flutter_html: ^1.1.1 # rendering html and css as Flutter widgets
+  flutter_swiper: ^1.1.6 # swiper
+  flutter_local_notifications: ^3.0.2 # 本地通知
+  faker: ^1.3.0 # 造假数据
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+# The following section is specific to Flutter.
+flutter:
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  assets:
+    - assets/agreements/ # 加载一个目录下所有的文件
+    - assets/images/
+    - assets/files/turkey-walking.json # 加载指定的文件
+
+
+  # An image asset can refer to one or more resolution-specific "variants", see
+  # https://flutter.dev/assets-and-images/#resolution-aware.
+
+  # For details regarding adding assets from package dependencies, see
+  # https://flutter.dev/assets-and-images/#from-packages
+
+  # To add custom fonts to your application, add a fonts section here,
+  # in this "flutter" section. Each entry in this list should have a
+  # "family" key with the font family name, and a "fonts" key with a
+  # list giving the asset and other descriptors for the font. For
+  # example:
+  # fonts:
+  #   - family: Schyler
+  #     fonts:
+  #       - asset: fonts/Schyler-Regular.ttf
+  #       - asset: fonts/Schyler-Italic.ttf
+  #         style: italic
+  #   - family: Trajan Pro
+  #     fonts:
+  #       - asset: fonts/TrajanPro.ttf
+  #       - asset: fonts/TrajanPro_Bold.ttf
+  #         weight: 700
+  #
+  # For details regarding fonts from package dependencies,
+  # see https://flutter.dev/custom-fonts/#from-packages

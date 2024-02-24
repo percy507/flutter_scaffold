@@ -1,0 +1,30 @@
+buildscript {
+    ext.kotlin_version = '1.3.50'
+    repositories {
+        // 腾讯云 maven 镜像聚合了：central、jcenter、google、gradle-plugin
+        maven { url 'http://mirrors.cloud.tencent.com/nexus/repository/maven-public/' }
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.5.0'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+allprojects {
+    repositories {
+        // 腾讯云 maven 镜像聚合了：central、jcenter、google、gradle-plugin
+        maven { url 'http://mirrors.cloud.tencent.com/nexus/repository/maven-public/' }
+    }
+}
+
+rootProject.buildDir = '../build'
+
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+    project.evaluationDependsOn(':app')
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

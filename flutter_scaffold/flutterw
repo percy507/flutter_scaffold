@@ -1,0 +1,140 @@
+#!/usr/bin/env bash
+
+##############################################################################
+##
+##  flutterw 用来下载 Flutter SDK, 类似于 gradlew
+##  作用: 保证所有开发者或 CI 服务器使用的 Flutter 版本一致
+##  如果 ./flutterw 无法执行，执行 chmod +x ./flutterw 命令将其变为可执行文件
+##
+##############################################################################
+
+flutter_channel="stable" # channel，不重要，本质上也是 git 分支，我们使用 tag 对应的版本分支
+flutter_version="1.22.5" # tag版本分支
+
+# 版本查询地址：https://flutter.cn/docs/development/tools/sdk/releases
+# git地址：https://github.com/flutter/flutter.git       # 国外地址
+# gitee地址：https://gitee.com/mirrors/Flutter.git      # 国内地址，相对快一些
+distribution_url="https://gitee.com/mirrors/Flutter.git"
+
+base_path=$(
+  cd $(dirname $0)
+  pwd
+)
+download_dir="$base_path/.flutter"
+
+flutterw_space="\n          " # 空格填充 `flutterw: `
+flutter_command=""            # flutter 命令所在路径
+dart_command=""               # dart 命令所在路径
+current_flutter_version=""    # 当前 flutter 的版本
+is_version_equal=""           # flutter 的目标版本与当前版本是否相同
+
+# 设置 flutter 国内镜像地址
+export FLUTTER_GIT_URL=$distribution_url # 设置 flutter 仓库为国内源，否则在执行 flutter --version 命令会很卡
+export PUB_HOSTED_URL=https://pub.flutter-io.cn
+export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
+
+# 定义命令
+# windows 系统需要使用 git bash
+if [[ $(uname) == *NT* ]]; then
+  flutter_command="$download_dir/bin/flutter.bat"
+  dart_command="$download_dir/bin/cache/dart-sdk/bin/dart.exe"
+else
+  flutter_command="$download_dir/bin/flutter"
+  dart_command="$download_dir/bin/cache/dart-sdk/bin/dart"
+fi
+
+# echo 输出
+function _log() {
+  local YELLOW='\033[1;33m'
+  local NC='\033[0m' # No Color
+
+  echo -e "${YELLOW}flutterw:${NC} ${1}"
+}
+
+# 执行方法封装
+# 支持 `./flutterw dart` 来运行dart文件
+function execFlutter() {
+  if [[ $1 == "dart" ]]; then
+    local str=$*
+    local substr=${str:4}
+    $dart_command $substr
+  elif [[ $1 == "upgrade" || $1 == "downgrade" || $1 == "channel" || $1 == "version" ]]; then
+    _log "below commands are disabled${flutterw_space}[flutter upgrade]${flutterw_space}[flutter downgrade]${flutterw_space}[flutter channel]${flutterw_space}[flutter version]"
+    exit 1
+  else
+    $flutter_command $*
+  fi
+}
+
+function getCurrentFlutterVersion() {
+  current_flutter_version=$($flutter_command --version | grep '^Flutter' | cut -d ' ' -f2)
+}
+
+# 判断 flutter version 是否发生变化
+function checkFlutterVersion() {
+  getCurrentFlutterVersion
+  # 下面是赋值一个bool表达式给一个变量的两种方法
+  [[ $current_flutter_version == $flutter_version ]] && is_version_equal=true || is_version_equal=false
+  # [[ $current_flutter_version == "$flutter_version" ]]
+  # is_version_equal=$? # 值为0或1。shell中，0是true，1是false
+}
+
+# 检查并安装 flutter、flutter 项目的依赖项
+function checkDependency() {
+  # 检查是否有未安装的 flutter 依赖项（如果有，会自动安装），并输出一份报告
+  _log "flutter doctor"
+  $flutter_command doctor
+
+  if [[ $(ls | grep '^pubspec.yaml') == "pubspec.yaml" ]]; then
+    # 安装 flutter 项目的依赖包
+    _log "flutter pub get"
+    $flutter_command pub get
+  fi
+}
+
+if [[ ! -r $flutter_command ]]; then
+  rm -rf $download_dir
+
+  if [[ ! -d $download_dir ]]; then
+    _log "mkdir $download_dir"
+    mkdir $download_dir
+  fi
+
+  _log "start download flutter sdk"
+  _log "git clone -b $flutter_version $distribution_url $download_dir"
+  git clone -b $flutter_version $distribution_url $download_dir
+
+  if [[ -r $flutter_command ]]; then
+    _log "download sdk success"
+    checkDependency
+  else
+    _log "download sdk failed"
+    exit 1
+  fi
+fi
+
+# 是否需要切换 version
+checkFlutterVersion
+if [[ $is_version_equal == "false" ]]; then
+  _log "current version: $current_flutter_version${flutterw_space}target version: $flutter_version"
+
+  (cd $download_dir && git config advice.detachedHead false)
+
+  _log "version >> git pull"
+  (cd $download_dir && git pull)
+
+  _log "version >> git checkout $flutter_version"
+  (cd $download_dir && git checkout $flutter_version && $flutter_command precache)
+
+  checkDependency
+
+  # 判断切换版本是否成功
+  checkFlutterVersion
+  if [[ $is_version_equal == "false" ]]; then
+    _log "checkout version failed"
+    exit 1
+  fi
+fi
+
+_log "Flutter version $current_flutter_version"
+execFlutter $*
